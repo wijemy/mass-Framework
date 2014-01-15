@@ -1,6 +1,6 @@
 define(["$spec"],function( spec ){
   
-    $.fixture('模块加载模块的加载测试', {
+    describe('loader', {
         "加载单个模块":function(id){
             //语言模块会返回一个函数
             $.require("$lang",function(ret){
@@ -31,6 +31,10 @@ define(["$spec"],function( spec ){
             $.require( "./test/loader/bbb", function(ret){
                 $.log("测试./test/loader/bbb")
                 expect( ret.bbb, id).eq( "bbb" );
+            });
+            $.require( "./test/loader/aaa.bbb.ccc", function(ret){
+                $.log("测试./test/loader/aaa.bbb.ccc")
+                expect( ret, id).eq( "aaa.bbb.ccc" );
             });
         },
         "测试exports模块依赖":function(id){
@@ -88,9 +92,7 @@ define(["$spec"],function( spec ){
             $.require("$query", function(ret){
                 expect( typeof ret.pseudoHooks, id).eq( "object" );
             });
-            $.require("$flow", function(ret){
-                expect( typeof new ret().uuid, id).eq( "function" );
-            });
+
         },
         "死链测试": function(){
             $.require("dead_link",function(){

@@ -31,13 +31,13 @@ define(["$spec","$node"],function(){
     var t = $('#test-parent4',idoc2);
     // $.addTestModule2 =$.noop;
     
-    $.fixture("节点模块-node",{
+    describe("node",{
         append: function(){
             //先添加两个类为.test_node的P元素
             $("body",idoc ).append("<p class='test_node'>测试append方法<strong>这是它的内部</strong></p><p class='test_node'>测试append方法<strong>这是它的内部</strong></p><div id='test_text'></div>");
-            expect( $(".test_node",idoc ).length ).eq(2);
+            expect( $(".test_node",idoc ).length ).eq(2,"2");
             $("#test_text",idoc ).text("888888888");
-            expect( $("#test_text",idoc ).text() ).eq("888888888");
+            expect( $("#test_text",idoc ).text() ).eq("888888888","text");
             var nav = $("<nav>test</nav>").appendTo( $("body",idoc ) )
             expect( nav[0].tagName ).eq("NAV");
             nav.remove()
@@ -84,12 +84,16 @@ define(["$spec","$node"],function(){
                 return this;
             });
         },
-        parseHTML: function(){
+        parseHTML: function(id){
             var str = "<h1>My First<strong>Heading</strong></h1><p>My first paragraph.</p><script>document.aa = 'test';</script>";
             var fragment = $.parseHTML(str);
-            expect(fragment.firstChild.nodeName ).eq("H1");
+            expect(fragment.firstChild.nodeName ).eq("H1","使用parseHTML创建 h1 标签成功");
             var style = $("<style>.testtest {width:1px;height:1px;opacity:0.55;filter:alpha(opacity=55); }</style>")//.appendTo("head");
-            expect( style[0].nodeType ).eq(1)
+            expect( style[0].tagName).eq("STYLE", "使用parseHTML创建 style 标签成功");
+            "thead,tbody,tfoot,colgroup,caption,tr,th,td,optgroup,option,legend,area,param".replace($.rword, function(tag){
+                expect($.parseHTML("<"+tag+"/>").firstChild.tagName.toLowerCase(), id).eq(tag, "使用parseHTML创建 "+tag+" 标签成功")
+            })
+
 
         },
         "$.fn.data": function(){
@@ -149,6 +153,7 @@ define(["$spec","$node"],function(){
     
         },
         has: function(){
+           // alert($("#aaa",idoc2).html())
             expect(li.has("b" ).length ).eq(1);
             expect(li.filter("._travel"  ).length ).eq(2);
             //移除测试数据
